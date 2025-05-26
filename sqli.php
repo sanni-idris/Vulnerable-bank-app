@@ -1,37 +1,42 @@
 <?php
- // DB credentials
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+
 $host = "localhost";
 $user = "root";
 $pass = "Working247365$";
-$db = "vulnlab";
+$db = "vulbapp"; 
 
-//Connect to DB
 $conn = mysqli_connect($host, $user, $pass, $db);
 
-//check connection
 if (!$conn) {
-   die("Connection failed: " . mysqli_connect_error());
+    die("Connection failed: " . mysqli_connect_error());
 }
-//check form submission
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-   $username = $_POST['username'];
-   $password = $_POST['password'];
-//vulnerable sql query
-$sql =  "SELECT * FROM users WHERE username = '$username' AND password = '$password'";
-$result = mysqli_query($conn, $sql);
 
-if ($result && mysqli_num_rows($result) == 1) {
-    echo "<h3>Welcome, " . htmlspecialchars($username) . "!</h3>";
+if (isset($_POST['username']) && isset($_POST['password'])) {
+    $username = $_POST['username'];
+    $password = $_POST['password'];
+
+    // Vulnerable query
+    $sql = "SELECT * FROM users WHERE username ='$username'";
+
+    $result = mysqli_query($conn, $sql);
+
+    if (mysqli_num_rows($result) > 0) {
+        echo "<h3>✅ Logged in successfully!</h3>";
     } else {
-      echo "<h3>Login failed.</h3>";
+        echo "<h3>❌ Invalid login</h3>";
     }
-
 }
 ?>
 
-<h3>Login</h3>
+<!-- Simple login form -->
 <form method="POST">
-  Username: <input name="username"><br>
-  password: <input type="password" name="password"><br>
-  <input type="submit" value="login">
+    <label>Username:</label><br>
+    <input type="text" name="username"><br>
+    <label>Password:</label><br>
+    <input type="password" name="password"><br><br>
+    <button type="submit">Login</button>
 </form>
+
