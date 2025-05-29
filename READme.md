@@ -32,7 +32,11 @@ This is a deliberately insecure banking web application built for educational an
 
 ---
 
-### 🛰️ Server-Side Request Forgery (SSRF)
+
+
+
+   ### 🛰️ Server-Side Request Forgery (SSRF)
+
 
 **Vulnerability Summary**:  
 A basic SSRF vulnerability was implemented in the application to simulate insecure server-side fetching of external resources. The `ssrf.php` page accepts a URL as input without validation and passes it directly to `file_get_contents()`, allowing crafted requests to internal or external systems.
@@ -53,5 +57,24 @@ An attacker could use this flaw to access internal services, metadata endpoints 
 
 
 
+
+Sanni Babatunde Idris 
+### Broken Access Control (BAC) Vulnerability
+
+**Description:**  
+The application improperly restricts access to user-specific resources, allowing attackers to access or modify data belonging to other users by manipulating URL parameters.
+
+**Vulnerable Endpoint:**  
+`edit-profile.php?id=USER_ID`
+
+**How to Test:**  
+Change the `id` parameter in the URL to another user’s ID (e.g., from `1` to `2`). The page will load the profile of the user corresponding to the supplied ID without proper authorization checks.
+
+**Impact:**  
+An attacker can view or potentially modify other users' sensitive information, leading to data leakage and privilege escalation.
+
+**Mitigation:**  
+Implement proper authorization checks to ensure that users can only access or modify their own data based on session information, not user-supplied input.
+
 ## Author
-Sanni Babatunde Idris (@sanni-idris)
+Sanni Babatunde Idris(@sanni-idris)
