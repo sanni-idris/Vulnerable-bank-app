@@ -16,5 +16,42 @@ This is a deliberately insecure banking web application built for educational an
 - MySQL – Database (for injection testing)
 - BackBox Linux – Testing environment
 
+### 5. Cross-Site Request Forgery (CSRF)
+
+- **Vulnerability Type**: CSRF (Cross-Site Request Forgery)
+- **Affected File**: `change-email.php`
+- **Attack Vector**: Forces an authenticated user to unknowingly submit a request to change their email address.
+- **Exploit File**: `csrf-attack.html`
+
+#### 🔥 Example Exploit:
+```html
+<form action="http://localhost/vulbapp/change-email.php" method="POST">
+  <input type="hidden" name="email" value="attacker@example.com">
+</form>
+<script>document.forms[0].submit();</script>
+
+---
+
+### 🛰️ Server-Side Request Forgery (SSRF)
+
+**Vulnerability Summary**:  
+A basic SSRF vulnerability was implemented in the application to simulate insecure server-side fetching of external resources. The `ssrf.php` page accepts a URL as input without validation and passes it directly to `file_get_contents()`, allowing crafted requests to internal or external systems.
+
+**Proof of Concept**:  
+Accessing:
+http://localhost/vulbapp/ssrf.php?url=http://example.com
+
+will retrieve and display content from the given URL.
+
+**Security Risk**:  
+An attacker could use this flaw to access internal services, metadata endpoints (e.g., AWS `169.254.169.254`), or scan internal networks.
+
+**Remediation**:  
+- Validate and whitelist URLs or hostnames.
+- Avoid server-side URL fetching from user input unless absolutely necessary.
+- Use SSRF-aware libraries and network segmentation.
+
+
+
 ## Author
 Sanni Babatunde Idris (@sanni-idris)
