@@ -1,4 +1,7 @@
 <?php
+include_once 'logger.php';
+log_event("Page accessed: /var/www/html/vulbapp/sqli.php");
+
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);

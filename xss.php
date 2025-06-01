@@ -1,4 +1,7 @@
 <?php
+include_once 'logger.php';
+log_event("Page accessed: " . $_SERVER['REQUEST_URI']);
+
 if (isset($_POST['comment'])){
     $comment = $_POST['comment'];
     file_put_contents("comments.txt", $comment . "\n", FILE_APPEND);
@@ -14,5 +17,8 @@ $comments = file_exists("comments.txt") ? file("comments.txt") : [];
 
 <h4>All comments</h4>
 <?php foreach ($comments as $c): ?>
+log_event("Page accessed: /var/www/html/vulbapp/xss.php");
 <p><?php echo $c; ?></p> <!-- No sanitization! -->
+log_event("Page accessed: /var/www/html/vulbapp/xss.php");
 <?php endforeach; ?>
+log_event("Page accessed: /var/www/html/vulbapp/xss.php");

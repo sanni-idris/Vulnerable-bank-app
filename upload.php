@@ -1,4 +1,7 @@
 <?php
+include_once 'logger.php';
+log_event("Page accessed: /var/www/html/vulbapp/upload.php");
+
 if (isset($_FILES['file'])) {
    $file = $_FILES['file']['name'];
    $path = "uploads/" . $file;

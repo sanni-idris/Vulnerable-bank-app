@@ -1,4 +1,6 @@
 <?php
+include_once 'logger.php';
+log_event("Page accessed: /var/www/html/vulbapp/change-email.php");
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 

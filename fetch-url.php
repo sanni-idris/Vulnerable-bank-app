@@ -1,4 +1,6 @@
 <?php
+log_event("Page accessed: /var/www/html/vulbapp/fetch-url.php");
+include_once 'logger.php';
 if (isset($_GET['url'])) {
     $url = $_GET['url'];
     $response = file_get_contents($url);
@@ -12,5 +14,6 @@ if (isset($_GET['url'])) {
         <input type="submit" value="Fetch" />
     </form>
 <?php
+log_event("Page accessed: /var/www/html/vulbapp/fetch-url.php");
 }
 ?>

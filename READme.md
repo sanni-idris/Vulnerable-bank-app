@@ -58,7 +58,7 @@ An attacker could use this flaw to access internal services, metadata endpoints 
 
 
 
-Sanni Babatunde Idris 
+ 
 ### Broken Access Control (BAC) Vulnerability
 
 **Description:**  
@@ -76,5 +76,29 @@ An attacker can view or potentially modify other users' sensitive information, l
 **Mitigation:**  
 Implement proper authorization checks to ensure that users can only access or modify their own data based on session information, not user-supplied input.
 
+## 🪵 logger.php – Basic Logging Utility
+
+This file contains a `log_event()` function used to log custom events or messages to a flat file (`logs/event_log.txt`). It's used across various components in the app to simulate insecure logging practices.
+
+### 📂 Path
+`app/logger.php`
+
+### 🔍 What It Does
+
+- Creates the `/logs` directory if it doesn't exist
+- Logs messages with a timestamp
+- Appends logs to `logs/event_log.txt`
+
+### 🔧 Usage Example
+
+In any PHP file (e.g., `login.php` or `sqli.php`), include and use like this:
+
+```php
+include 'logger.php';
+log_event("Login attempt for user: admin");
+
+
+
 ## Author
 Sanni Babatunde Idris(@sanni-idris)
+
