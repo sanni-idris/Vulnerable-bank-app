@@ -2,103 +2,131 @@
 
 This is a deliberately insecure banking web application built for educational and ethical hacking practice. It includes:
 
-- ✅ SQL Injection (SQLi)
-- ✅ Cross-Site Scripting (XSS)
-- ✅ Insecure File Upload
+## Vulnerabilities & Highlights
+
+### SQL Injection (SQLi)
+
+- Allows attackers to inject malicious SQL code via input fields, bypassing authentication or extracting data.
+
+### Cross-Site Scripting (XSS)
+
+- Vulnerable pages allow attackers to inject malicious JavaScript that runs in victims' browsers.
+
+### Insecure File Upload
+
+- Allows uploading of files without proper validation, which can lead to remote code execution or defacement.
+
+### Cross-Site Request Forgery (CSRF)
+
+- Affected File: `change-email.php`  
+- Exploit Example: `csrf-attack.html` forces authenticated users to unknowingly submit requests.
+
+### Server-Side Request Forgery (SSRF)
+
+- Vulnerable Page: `ssrf.php`  
+- Allows fetching of arbitrary URLs without validation, potentially exposing internal systems.
+
+### Broken Access Control
+
+- Affected Endpoint: `edit-profile.php?id=USER_ID`  
+- Allows unauthorized access or modification of other users’ data.
+
+### Insecure Logging
+
+- `logger.php` logs events to a flat file without sanitization, potentially exposing sensitive information.
 
 🔒 Intended for use in controlled lab environments only.
 
 ---
 
-## Tools Used
-- Apache2 – Web server
-- PHP – Backend scripting
-- MySQL – Database (for injection testing)
-- BackBox Linux – Testing environment
+## Running the App with Docker
 
-### 5. Cross-Site Request Forgery (CSRF)
+To simplify setup and avoid environment issues, this project now supports running inside Docker containers.
 
-- **Vulnerability Type**: CSRF (Cross-Site Request Forgery)
-- **Affected File**: `change-email.php`
-- **Attack Vector**: Forces an authenticated user to unknowingly submit a request to change their email address.
-- **Exploit File**: `csrf-attack.html`
+### Prerequisites
 
-#### 🔥 Example Exploit:
-```html
+- Docker installed on your machine  
+- Docker Compose (usually bundled with Docker Desktop)
+
+### How to Run
+
+Clone the repo, then from the project root directory run:
+
+```bash
+docker-compose up --build
+
+This will:
+
+Build the PHP + Apache Docker image
+
+Launch the app accessible at http://localhost:8080 (default port mapping)
+
+Login Credentials
+Use the following dummy login to access the app dashboard:
+
+Username: admin
+
+Password: admin123
+
+Vulnerabilities Included
+1. SQL Injection (SQLi)
+Classic SQL injection vulnerability to practice input sanitization bypass.
+
+2. Cross-Site Scripting (XSS)
+Stored and reflected XSS vulnerabilities present in various input fields.
+
+3. Insecure File Upload
+Allows uploading files without proper validation leading to potential code execution.
+
+4. Cross-Site Request Forgery (CSRF)
+Affected File: change-email.php
+Forces an authenticated user to unknowingly submit a request to change their email address.
+
+Exploit Example:
+
 <form action="http://localhost/vulbapp/change-email.php" method="POST">
   <input type="hidden" name="email" value="attacker@example.com">
 </form>
 <script>document.forms[0].submit();</script>
 
----
+5. Server-Side Request Forgery (SSRF)
+Vulnerable Page: ssrf.php
+Accepts URLs without validation, allowing internal and external resource fetching.
 
+Proof of Concept:
 
+Accessing http://localhost/vulbapp/ssrf.php?url=http://example.com fetches external content.
 
+6. Broken Access Control (BAC)
+Vulnerable Endpoint: edit-profile.php?id=USER_ID
+Improper authorization allows accessing/modifying other users' profiles by changing URL parameters.
 
-   ### 🛰️ Server-Side Request Forgery (SSRF)
+Basic Logging Utility - logger.php
+This file contains a log_event() function that logs events to a flat file (logs/event_log.txt). Used throughout the app to simulate insecure logging.
 
+Creates /logs directory if missing
 
-**Vulnerability Summary**:  
-A basic SSRF vulnerability was implemented in the application to simulate insecure server-side fetching of external resources. The `ssrf.php` page accepts a URL as input without validation and passes it directly to `file_get_contents()`, allowing crafted requests to internal or external systems.
+Appends timestamped events to the log file
 
-**Proof of Concept**:  
-Accessing:
-http://localhost/vulbapp/ssrf.php?url=http://example.com
-
-will retrieve and display content from the given URL.
-
-**Security Risk**:  
-An attacker could use this flaw to access internal services, metadata endpoints (e.g., AWS `169.254.169.254`), or scan internal networks.
-
-**Remediation**:  
-- Validate and whitelist URLs or hostnames.
-- Avoid server-side URL fetching from user input unless absolutely necessary.
-- Use SSRF-aware libraries and network segmentation.
-
-
-
-
- 
-### Broken Access Control (BAC) Vulnerability
-
-**Description:**  
-The application improperly restricts access to user-specific resources, allowing attackers to access or modify data belonging to other users by manipulating URL parameters.
-
-**Vulnerable Endpoint:**  
-`edit-profile.php?id=USER_ID`
-
-**How to Test:**  
-Change the `id` parameter in the URL to another user’s ID (e.g., from `1` to `2`). The page will load the profile of the user corresponding to the supplied ID without proper authorization checks.
-
-**Impact:**  
-An attacker can view or potentially modify other users' sensitive information, leading to data leakage and privilege escalation.
-
-**Mitigation:**  
-Implement proper authorization checks to ensure that users can only access or modify their own data based on session information, not user-supplied input.
-
-## 🪵 logger.php – Basic Logging Utility
-
-This file contains a `log_event()` function used to log custom events or messages to a flat file (`logs/event_log.txt`). It's used across various components in the app to simulate insecure logging practices.
-
-### 📂 Path
-`app/logger.php`
-
-### 🔍 What It Does
-
-- Creates the `/logs` directory if it doesn't exist
-- Logs messages with a timestamp
-- Appends logs to `logs/event_log.txt`
-
-### 🔧 Usage Example
-
-In any PHP file (e.g., `login.php` or `sqli.php`), include and use like this:
-
-```php
+Usage Example
+Include in any PHP script:
 include 'logger.php';
-log_event("Login attempt for user: admin");
+log_event("User logged in: admin");
+
+Updates & Fixes
+Added Docker support (Dockerfile + docker-compose.yml) for easy deployment
+
+Implemented a simple login system with session management (login.php and index.php)
+
+Fixed file permission issues on /logs and /uploads directories
+
+Cleaned up header and redirection errors in login scripts
+
+Author
+Sanni Babatunde Idris (@sanni-idris)
+
+⚠️ WARNING: Use only in safe, controlled environments for educational purposes. Do NOT deploy in production.
 
 
 
-## Author
-Sanni Babatunde Idris(@sanni-idris)
 
