@@ -11,5 +11,5 @@ function log_event($message) {
 
     file_put_contents($logFile, $entry, FILE_APPEND);
 }
-?>
+
 
